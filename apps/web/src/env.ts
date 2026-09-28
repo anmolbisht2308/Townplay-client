@@ -13,6 +13,8 @@ const serverSchema = z.object({
 /** Public env. Each key is read literally so Next can inline it in client bundles. */
 const clientSchema = z.object({
   NEXT_PUBLIC_SENTRY_DSN: optional,
+  /** Canonical site origin for metadata, sitemap and OpenGraph URLs. */
+  NEXT_PUBLIC_SITE_URL: z.url().default("http://localhost:3000"),
 });
 
 export function parseServerEnv(source: Record<string, string | undefined>) {
@@ -21,4 +23,5 @@ export function parseServerEnv(source: Record<string, string | undefined>) {
 
 export const clientEnv = clientSchema.parse({
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || undefined,
 });
