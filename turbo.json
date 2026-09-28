@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "agentGuidance": false,
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["API_URL", "NEXT_PUBLIC_*", "SENTRY_*"]
+    },
+    "typecheck": {},
+    "lint": {},
+    "test": {},
+    "dev": { "cache": false, "persistent": true }
+  }
+}

@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+dist/
+coverage/
+.turbo/
+.next/
+next-env.d.ts
