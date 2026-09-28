@@ -39,4 +39,7 @@ The full roadmap is in `docs/PLAN.md`. Work on **one phase at a time** and only 
 
 ## Web layout
 
-`apps/web/src`: `env.ts` (Zod; server `API_URL`, public `NEXT_PUBLIC_*`) · `i18n/` (locale from the `NEXT_LOCALE` cookie, no URL prefix; `setLocale` server action) · `app/` · `components/ui` (shadcn-style) · `messages/{en,hi}.json` (keys must match; tested).
+`apps/web/src`: `env.ts` (Zod; server `API_URL`, public `NEXT_PUBLIC_*`) · `i18n/` (locale from the `NEXT_LOCALE` cookie, no URL prefix; `setLocale` server action) · `app/` · `components/ui` (shadcn-style) · `messages/{en,hi}.json` (keys must match; tested) · `lib/server-api.ts` (`serverGet` for server components, straight to `API_URL`, cached) · `lib/api.ts` (`api.get/send` in the browser via the rewrite) · `components/auth-gate.tsx` · `components/owner/*`.
+
+- Public pages (`/[city]`, `/[city]/venues/[slug]`) are server-rendered; filters are a plain GET form so they work without JS. Owner (`/owner`) and admin (`/admin/review`) pages are client-rendered behind `AuthGate`.
+- Images: Cloudinary URLs via `lib/images.ts` `imageUrl(url, width)`; photos are compressed in the browser (`lib/compress.ts`) before a signed upload.
