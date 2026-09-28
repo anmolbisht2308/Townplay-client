@@ -1,0 +1,31 @@
+{
+  "common": {
+    "appName": "Townplay",
+    "tagline": "Book turfs, courts and events in your city",
+    "language": "Language",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again."
+  },
+  "home": {
+    "title": "Play more in Bareilly",
+    "subtitle": "Find sports venues, book a slot in seconds and pay online.",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "welcome": "Hi, {name}",
+    "roles": "Roles: {roles}"
+  },
+  "signIn": {
+    "title": "Sign in to Townplay",
+    "google": "Continue with Google",
+    "or": "or",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "sendCode": "Send code",
+    "code": "6-digit code",
+    "codeSent": "We sent a code to {email}.",
+    "verify": "Verify and sign in",
+    "changeEmail": "Use a different email",
+    "invalidEmail": "Enter a valid email address.",
+    "invalidCode": "Enter the 6-digit code."
+  }
+}
