@@ -1,4 +1,5 @@
 import { apiErrorSchema, meSchema, type Me } from "@townplay/shared";
+import type { z } from "zod";
 
 export class ApiError extends Error {
   constructor(
@@ -39,3 +40,21 @@ export async function getMe(): Promise<Me | null> {
     throw err;
   }
 }
+
+/** Typed GET/POST/PATCH/DELETE helpers that parse the response with a shared schema. */
+export const api = {
+  get: async <T extends z.ZodType>(path: string, schema: T): Promise<z.infer<T>> =>
+    schema.parse(await apiFetch(path)),
+  send: async <T extends z.ZodType>(
+    method: "POST" | "PATCH" | "DELETE",
+    path: string,
+    schema: T,
+    body?: unknown,
+  ): Promise<z.infer<T>> =>
+    schema.parse(
+      await apiFetch(path, {
+        method,
+        ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+      }),
+    ),
+};

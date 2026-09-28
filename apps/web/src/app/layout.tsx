@@ -5,11 +5,13 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Providers } from "@/components/providers";
+import { clientEnv } from "@/env";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("common");
   return {
+    metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL),
     title: { default: t("appName"), template: `%s · ${t("appName")}` },
     description: t("tagline"),
   };
