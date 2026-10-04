@@ -102,6 +102,7 @@ export default async function EventsPage({ params, searchParams }: Props) {
       {list.items.length === 0 && (
         <EmptyState emoji="🎉" title={t("events.emptyTitle")} text={t("events.empty")} />
       )}
+      <h2 className="sr-only">{t("events.resultsHeading")}</h2>
       <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {list.items.map((e, i) => (
           <li

@@ -97,6 +97,7 @@ export default async function GamesPage({ params, searchParams }: Props) {
           }
         />
       )}
+      <h2 className="sr-only">{t("games.resultsHeading")}</h2>
       <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {games.map((g, i) => (
           <li

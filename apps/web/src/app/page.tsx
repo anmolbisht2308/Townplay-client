@@ -186,19 +186,14 @@ export default async function HomePage() {
               </span>
               {t("home.eyebrow", { city: city.name })}
             </p>
-            <h1
-              className="animate-fade-up text-[2.6rem] leading-[1.02] font-extrabold md:text-7xl"
-              style={delay(1)}
-            >
+            {/* Headline and subtitle render without an entry animation: they are the LCP. */}
+            <h1 className="text-[2.6rem] leading-[1.02] font-extrabold md:text-7xl">
               {t.rich("home.heroTitle", {
                 city: city.name,
                 mark: (c) => <span className="marker">{c}</span>,
               })}
             </h1>
-            <p
-              className="animate-fade-up max-w-lg text-lg text-muted-foreground md:text-xl"
-              style={delay(2)}
-            >
+            <p className="max-w-lg text-lg text-muted-foreground md:text-xl">
               {t("home.heroSubtitle")}
             </p>
 

@@ -82,7 +82,7 @@ export default async function CityPage({ params, searchParams }: Props) {
 
   return (
     <section data-wide className="space-y-6 pt-6">
-      <header className="animate-fade-up space-y-2">
+      <header className="space-y-2">
         <p className="text-sm font-semibold text-primary-strong">{t("city.eyebrow")}</p>
         <h1 className="text-3xl font-extrabold md:text-5xl">
           {t("city.title", { city: city.name })}
@@ -166,12 +166,12 @@ export default async function CityPage({ params, searchParams }: Props) {
       </div>
 
       {list && (
-        <p className="text-sm text-muted-foreground">
+        <h2 className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
           {t("city.count", {
             count: count + (list.nextCursor ? 1 : 0),
             more: list.nextCursor ? "more" : "exact",
           })}
-        </p>
+        </h2>
       )}
 
       {list && list.items.length === 0 && (

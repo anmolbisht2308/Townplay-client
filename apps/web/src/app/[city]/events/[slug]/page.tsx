@@ -117,13 +117,13 @@ export default async function EventPage({ params }: Props) {
             src={imageUrl(e.photos[0].url, 1200)}
             alt={e.title}
             fetchPriority="high"
-            className="animate-fade-in h-56 w-full object-cover md:h-80"
+            className="h-56 w-full object-cover md:h-80"
           />
         ) : (
           <SportArt
             sport={e.type === "club_session" ? "club" : "event"}
             size="lg"
-            className="animate-scale-in h-56 md:h-80"
+            className="h-56 md:h-80"
           />
         )}
         <span className="animate-pop absolute top-4 left-4 grid min-w-16 place-items-center rounded-2xl bg-background/95 px-3 py-2 text-center leading-none shadow-lift md:left-6">
@@ -133,7 +133,7 @@ export default async function EventPage({ params }: Props) {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_24rem] lg:gap-x-8">
-        <header className="animate-fade-up min-w-0 space-y-3 lg:col-start-1">
+        <header className="min-w-0 space-y-3 lg:col-start-1">
           <span className="inline-flex rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-strong">
             {t(`types.${e.type}`)}
           </span>

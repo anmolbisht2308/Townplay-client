@@ -105,7 +105,7 @@ export default async function VenuePage({ params }: Props) {
               loading={i === 0 ? "eager" : "lazy"}
               fetchPriority={i === 0 ? "high" : "auto"}
               decoding="async"
-              className={`animate-fade-in h-56 w-[86%] shrink-0 rounded-2xl object-cover md:h-full md:w-full md:rounded-none ${
+              className={`h-56 w-[86%] shrink-0 rounded-2xl object-cover md:h-full md:w-full md:rounded-none ${
                 i === 0 ? "md:col-span-2 md:row-span-2 md:h-[26rem]" : ""
               }`}
               style={{ "--i": i } as React.CSSProperties}
@@ -116,13 +116,13 @@ export default async function VenuePage({ params }: Props) {
         <SportArt
           sport={venue.sports[0]}
           size="lg"
-          className="animate-scale-in -mx-4 h-52 md:mx-0 md:h-72 md:rounded-2xl"
+          className="-mx-4 h-52 md:mx-0 md:h-72 md:rounded-2xl"
         />
       )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_24rem] lg:gap-x-8">
         {/* ---------- title ---------- */}
-        <header className="animate-fade-up min-w-0 space-y-3 lg:col-start-1">
+        <header className="min-w-0 space-y-3 lg:col-start-1">
           <div className="flex flex-wrap gap-1.5">
             {venue.sports.map((s) => (
               <span

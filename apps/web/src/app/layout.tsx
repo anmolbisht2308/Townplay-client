@@ -2,7 +2,7 @@ import { cityResponseSchema } from "@townplay/shared";
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Bricolage_Grotesque, Inter, Noto_Sans_Devanagari } from "next/font/google";
+import { Bricolage_Grotesque, Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { z } from "zod";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -14,19 +14,14 @@ import { clientEnv } from "@/env";
 import { serverGet } from "@/lib/server-api";
 import "./globals.css";
 
-// Self-hosted at build time (no request to Google from the browser). Devanagari is only
-// downloaded by phones that actually render Hindi text (unicode-range subsets).
+// Self-hosted at build time (no request to Google from the browser). Hindi uses the phone's
+// built-in Devanagari font (Android, iOS and Windows all ship one): a Devanagari web font also
+// covers the ₹ sign, so it was downloaded on every page with a price (~200 KB).
 const body = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 const heading = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
-});
-const deva = Noto_Sans_Devanagari({
-  subsets: ["devanagari"],
-  variable: "--font-deva",
-  display: "swap",
-  preload: false,
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -60,7 +55,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const t = await getTranslations("common");
   const citySlug = await defaultCitySlug();
   return (
-    <html lang={locale} className={`${body.variable} ${heading.variable} ${deva.variable}`}>
+    <html lang={locale} className={`${body.variable} ${heading.variable}`}>
       <body className="min-h-dvh antialiased">
         <NextIntlClientProvider>
           <Providers>

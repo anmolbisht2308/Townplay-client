@@ -88,7 +88,7 @@ export function EmptyState({
 
 export function PageHeading({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
-    <header className="animate-fade-up space-y-2">
+    <header className="space-y-2">
       <p className="text-sm font-semibold text-primary-strong">{eyebrow}</p>
       <h1 className="text-3xl font-extrabold md:text-5xl">{title}</h1>
     </header>

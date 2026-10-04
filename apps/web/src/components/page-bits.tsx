@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 /** Page heading + empty state usable from client components (filters.tsx ones are server-only). */
 export function PageHeading({ eyebrow, title }: { eyebrow?: string; title: string }) {
   return (
-    <header className="animate-fade-up space-y-2">
+    <header className="space-y-2">
       {eyebrow && <p className="text-sm font-semibold text-primary-strong">{eyebrow}</p>}
       <h1 className="text-3xl font-extrabold md:text-4xl">{title}</h1>
     </header>

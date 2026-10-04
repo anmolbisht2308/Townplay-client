@@ -525,7 +525,8 @@
     "typeLabel": "Type",
     "emptyTitle": "No events here yet",
     "back": "All events in {city}",
-    "about": "About this event"
+    "about": "About this event",
+    "resultsHeading": "Events"
   },
   "tickets": {
     "title": "My tickets",
@@ -650,7 +651,8 @@
     "dayLabel": "Day",
     "emptyTitle": "No open games right now",
     "howItWorks": "Pay for your spot online and turn up. If the game is cancelled you get everything back.",
-    "bookToHost": "Book a court and open a game"
+    "bookToHost": "Book a court and open a game",
+    "resultsHeading": "Open games"
   },
   "sharing": {
     "title": "Play with others",

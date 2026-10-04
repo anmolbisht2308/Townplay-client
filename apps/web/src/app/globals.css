@@ -10,7 +10,7 @@
   --foreground: oklch(0.2 0.02 260);
   --card: oklch(1 0 0);
   --surface: oklch(0.965 0.012 145);
-  --primary: oklch(0.56 0.17 148);
+  --primary: oklch(0.52 0.16 149);
   --primary-strong: oklch(0.46 0.14 150);
   --primary-foreground: oklch(0.99 0 0);
   --primary-soft: oklch(0.95 0.05 148);
@@ -21,7 +21,7 @@
   --muted-foreground: oklch(0.5 0.02 260);
   --border: oklch(0.91 0.01 145);
   --input: oklch(0.88 0.012 145);
-  --ring: oklch(0.56 0.17 148);
+  --ring: oklch(0.52 0.16 149);
   --destructive: oklch(0.577 0.22 27);
   --warning: oklch(0.75 0.15 70);
   --radius: 0.875rem;
@@ -34,8 +34,10 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-body), var(--font-deva), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-heading), var(--font-deva), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, "Noto Sans Devanagari", sans-serif;
+  --font-display:
+    var(--font-heading), var(--font-body), ui-sans-serif, system-ui, "Noto Sans Devanagari",
+    sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -107,9 +109,11 @@
 
 /* ---------- motion ---------- */
 
+/* Entry animations start at 1% opacity, not 0: it looks the same, but Chrome only counts
+   visible elements for Largest Contentful Paint, so a 0 start would delay LCP. */
 @keyframes fade-up {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(14px);
   }
   to {
@@ -119,12 +123,12 @@
 }
 @keyframes fade-in {
   from {
-    opacity: 0;
+    opacity: 0.01;
   }
 }
 @keyframes scale-in {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: scale(0.94);
   }
   to {
@@ -282,9 +286,15 @@
   box-decoration-break: clone;
 }
 
-/* Page enter on every navigation (app/template.tsx re-mounts per route). */
+/* Page enter on every navigation (app/template.tsx re-mounts per route). Movement only, no
+   fade: content is visible on the first frame, so it never delays Largest Contentful Paint. */
+@keyframes rise {
+  from {
+    transform: translateY(10px);
+  }
+}
 .page-enter {
-  animation: fade-up 0.45s var(--ease-out) both;
+  animation: rise 0.45s var(--ease-out);
 }
 
 /* Cross-document navigations (full loads) cross-fade where supported. */
