@@ -404,7 +404,12 @@
     "waToVenue": "Hi, I have booked {court} on {date}, {start}–{end} at {venue}. Booking code {code}. Name: {name}.",
     "balanceDueShares": "Still to pay at the venue",
     "sharesPaid": "Paid online by players/friends",
-    "memberDiscount": "Member discount"
+    "memberDiscount": "Member discount",
+    "eyebrow": "Your courts and slots",
+    "emptyTitle": "No upcoming bookings",
+    "emptyPastTitle": "No past bookings yet",
+    "date": "Date",
+    "time": "Time"
   },
   "calendar": {
     "title": "Calendar",

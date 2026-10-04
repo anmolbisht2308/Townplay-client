@@ -404,7 +404,12 @@
     "waToVenue": "नमस्ते, मैंने {venue} में {court} {date}, {start}–{end} के लिए बुक किया है। बुकिंग कोड {code}। नाम: {name}।",
     "balanceDueShares": "वेन्यू पर अभी बाकी",
     "sharesPaid": "खिलाड़ियों/दोस्तों ने ऑनलाइन दिया",
-    "memberDiscount": "मेंबर छूट"
+    "memberDiscount": "मेंबर छूट",
+    "eyebrow": "आपके कोर्ट और स्लॉट",
+    "emptyTitle": "कोई आने वाली बुकिंग नहीं",
+    "emptyPastTitle": "अभी कोई पुरानी बुकिंग नहीं",
+    "date": "तारीख",
+    "time": "समय"
   },
   "calendar": {
     "title": "कैलेंडर",

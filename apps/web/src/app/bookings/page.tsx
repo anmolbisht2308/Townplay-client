@@ -8,6 +8,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { AuthGate } from "@/components/auth-gate";
 import { BookingStatusBadge } from "@/components/booking/status-badge";
+import { EmptyStateClient, PageHeading } from "@/components/page-bits";
 import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { longDate } from "@/lib/dates";
@@ -23,9 +24,9 @@ function List() {
     queryFn: () => api.get(`/bookings/mine?scope=${scope}`, z.array(bookingSchema)),
   });
   return (
-    <section className="space-y-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
-      <div className="flex gap-2" role="tablist">
+    <section className="space-y-6 pt-6">
+      <PageHeading eyebrow={t("eyebrow")} title={t("title")} />
+      <div className="inline-flex gap-1 rounded-xl bg-surface p-1" role="tablist">
         {(["upcoming", "past"] as const).map((s) => (
           <button
             key={s}
@@ -34,44 +35,75 @@ function List() {
             aria-selected={scope === s}
             onClick={() => setScope(s)}
             className={cn(
-              "rounded-full border px-4 py-1.5 text-sm",
-              scope === s && "border-primary bg-primary text-primary-foreground",
+              "pressable rounded-lg px-5 py-2 text-sm font-semibold",
+              scope === s ? "bg-card text-foreground shadow-card" : "text-muted-foreground",
             )}
           >
             {t(s)}
           </button>
         ))}
       </div>
-      {list.isPending && <p className="text-muted-foreground">{tc("loading")}</p>}
+      {list.isPending && (
+        <ul className="space-y-3">
+          {[0, 1, 2].map((i) => (
+            <li key={i} className="skeleton h-24 rounded-2xl" />
+          ))}
+        </ul>
+      )}
       {list.isError && <p className="text-destructive">{tc("error")}</p>}
       {list.data?.length === 0 && (
-        <div className="space-y-3">
-          <p className="text-muted-foreground">{t("empty")}</p>
-          <Link href="/bareilly" className={buttonVariants({ variant: "outline" })}>
-            {t("findVenue")}
-          </Link>
-        </div>
-      )}
-      <ul className="space-y-3">
-        {list.data?.map((b) => (
-          <li key={b.id}>
-            <Link
-              href={`/bookings/${b.id}`}
-              className="block space-y-1 rounded-lg border p-3 hover:bg-accent"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <p className="font-medium">{b.venue.name}</p>
-                <BookingStatusBadge status={b.status} />
-              </div>
-              <p className="text-sm">
-                {longDate(b.date, locale)} · {b.startTime}–{b.endTime}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {b.resource.name} · {t("code")} {b.code}
-              </p>
+        <EmptyStateClient
+          emoji={scope === "upcoming" ? "📅" : "🕰️"}
+          title={t(scope === "upcoming" ? "emptyTitle" : "emptyPastTitle")}
+          text={t("empty")}
+          action={
+            <Link href="/bareilly" className={buttonVariants()}>
+              {t("findVenue")}
             </Link>
-          </li>
-        ))}
+          }
+        />
+      )}
+      <ul className="space-y-3" key={scope}>
+        {list.data?.map((b, i) => {
+          const d = new Date(`${b.date}T00:00:00Z`);
+          return (
+            <li
+              key={b.id}
+              className="animate-fade-up"
+              style={{ "--i": Math.min(i, 8) } as React.CSSProperties}
+            >
+              <Link
+                href={`/bookings/${b.id}`}
+                className="lift flex items-stretch overflow-hidden rounded-2xl border bg-card shadow-card"
+              >
+                <div className="flex w-20 shrink-0 flex-col items-center justify-center bg-foreground py-3 text-background">
+                  <span className="text-[11px] font-semibold uppercase opacity-70">
+                    {d.toLocaleString(locale, { timeZone: "UTC", weekday: "short" })}
+                  </span>
+                  <span className="font-display text-3xl leading-none font-extrabold">
+                    {d.toLocaleString(locale, { timeZone: "UTC", day: "numeric" })}
+                  </span>
+                  <span className="text-[11px] font-semibold text-energy uppercase">
+                    {d.toLocaleString(locale, { timeZone: "UTC", month: "short" })}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 space-y-1 p-4">
+                  <p className="truncate font-bold">{b.venue.name}</p>
+                  <p className="text-sm font-semibold">
+                    {b.startTime}–{b.endTime} · {b.resource.name}
+                  </p>
+                  <BookingStatusBadge status={b.status} />
+                  <p className="text-xs text-muted-foreground">
+                    {t("code")}{" "}
+                    <span className="font-mono font-semibold tracking-wider">{b.code}</span>
+                    {" · "}
+                    {longDate(b.date, locale)}
+                  </p>
+                </div>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

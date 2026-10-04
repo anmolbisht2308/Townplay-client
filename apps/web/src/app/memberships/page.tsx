@@ -22,12 +22,15 @@ function List() {
   if (list.isError) return <p className="text-destructive">{tc("error")}</p>;
   return (
     <section className="space-y-4 pt-4">
-      <h1 className="text-2xl font-bold">{t("mineTitle")}</h1>
+      <h1 className="text-3xl font-extrabold">{t("mineTitle")}</h1>
       {list.data.length === 0 && <p className="text-muted-foreground">{t("empty")}</p>}
       <ul className="space-y-3">
         {list.data.map((m) => (
           <li key={m.id}>
-            <Link href={`/memberships/${m.id}`} className="block space-y-1 rounded-lg border p-3">
+            <Link
+              href={`/memberships/${m.id}`}
+              className="block space-y-1 rounded-2xl border bg-card p-4 shadow-card"
+            >
               <div className="flex items-center justify-between gap-2">
                 <p className="font-semibold">{m.plan?.name ?? m.batch?.title}</p>
                 <MembershipStatusBadge status={m.status} />

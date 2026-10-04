@@ -203,7 +203,7 @@ export function SharingPanel({ booking }: { booking: Booking }) {
   if (booking.split && shares.data) {
     const s = shares.data;
     return (
-      <section className="space-y-2 rounded-lg border p-3">
+      <section className="space-y-2 rounded-2xl border bg-card p-4 shadow-card">
         <h2 className="font-semibold">{t("split")}</h2>
         <p className="text-sm">{t("sharesPaid", { amount: formatPaise(s.sharesPaidPaise) })}</p>
         <p className="text-sm font-medium">
@@ -251,7 +251,7 @@ export function SharingPanel({ booking }: { booking: Booking }) {
     return null;
 
   return (
-    <section className="space-y-3 rounded-lg border p-3">
+    <section className="space-y-3 rounded-2xl border bg-card p-4 shadow-card">
       <h2 className="font-semibold">{t("title")}</h2>
       {mode === "none" && (
         <div className="flex flex-col gap-2">

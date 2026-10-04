@@ -50,14 +50,14 @@ function Detail({ id }: { id: string }) {
     <article className="space-y-5 pt-4">
       <header className="space-y-1">
         <div className="flex items-center justify-between gap-2">
-          <h1 className="text-2xl font-bold">{title}</h1>
+          <h1 className="text-3xl font-extrabold">{title}</h1>
           <MembershipStatusBadge status={d.status} />
         </div>
         <p className="text-muted-foreground">{d.venue.name}</p>
         {d.renewalOf && <p className="text-sm text-muted-foreground">{t("renewalOf")}</p>}
       </header>
 
-      <dl className="space-y-1 rounded-lg border p-3 text-sm">
+      <dl className="space-y-1 rounded-2xl border bg-card p-4 shadow-card text-sm">
         <div className="flex justify-between gap-2">
           <dt>{t("member")}</dt>
           <dd className="text-right">
@@ -133,7 +133,7 @@ function Detail({ id }: { id: string }) {
       )}
 
       {d.renewedBy && (
-        <div className="space-y-2 rounded-lg border p-3">
+        <div className="space-y-2 rounded-2xl border bg-card p-4 shadow-card">
           <p className="text-sm">{t("renewed")}</p>
           <Link
             href={`/memberships/${d.renewedBy}`}

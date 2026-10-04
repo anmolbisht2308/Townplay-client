@@ -33,7 +33,7 @@ export async function Offerings({ venueId, citySlug }: { venueId: string; citySl
           <h3 className="font-medium">{tm("plans")}</h3>
           <ul className="space-y-3">
             {data.plans.map((p) => (
-              <li key={p.id} className="space-y-2 rounded-lg border p-3">
+              <li key={p.id} className="space-y-2 rounded-2xl border bg-card p-4 shadow-card">
                 <div className="flex items-baseline justify-between gap-2">
                   <p className="font-semibold">{p.name}</p>
                   <p className="font-semibold">{formatPaise(p.pricePaise)}</p>
@@ -63,7 +63,7 @@ export async function Offerings({ venueId, citySlug }: { venueId: string; citySl
           <h3 className="font-medium">{tm("batches")}</h3>
           <ul className="space-y-3">
             {data.batches.map((b) => (
-              <li key={b.id} className="space-y-2 rounded-lg border p-3">
+              <li key={b.id} className="space-y-2 rounded-2xl border bg-card p-4 shadow-card">
                 <div className="flex items-baseline justify-between gap-2">
                   <p className="font-semibold">{b.title}</p>
                   <p className="shrink-0 text-sm font-semibold">

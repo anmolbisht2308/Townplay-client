@@ -45,7 +45,7 @@ function Order({ id }: { id: string }) {
     <article className="space-y-5">
       <header className="space-y-1">
         <div className="flex items-center justify-between gap-2">
-          <h1 className="text-2xl font-bold">{o.event.title}</h1>
+          <h1 className="text-3xl font-extrabold">{o.event.title}</h1>
           <OrderStatusBadge status={o.status} />
         </div>
         <p>{o.event.startsAt && eventWhen(o.event.startsAt, locale)}</p>
@@ -99,7 +99,7 @@ function Order({ id }: { id: string }) {
           {o.tickets.map((ticket, i) => (
             <div
               key={ticket.id}
-              className="flex flex-col items-center gap-2 rounded-lg border p-4 text-center"
+              className="flex flex-col items-center gap-2 rounded-2xl border bg-card p-5 shadow-card text-center"
             >
               <p className="text-sm font-medium">
                 {ticket.tierName} · {t("ticketOf", { n: i + 1, total: o.tickets.length })}

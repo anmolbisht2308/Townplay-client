@@ -21,7 +21,7 @@ function List() {
   });
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <h1 className="text-3xl font-extrabold">{t("title")}</h1>
       {orders.isPending && <p className="text-muted-foreground">{tc("loading")}</p>}
       {orders.isError && <p className="text-destructive">{tc("error")}</p>}
       {orders.data?.length === 0 && (
@@ -37,7 +37,7 @@ function List() {
           <li key={o.id}>
             <Link
               href={`/tickets/${o.id}`}
-              className="block space-y-1 rounded-lg border p-3 hover:bg-accent"
+              className="block space-y-1 rounded-2xl border bg-card p-4 shadow-card hover:bg-accent"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="font-medium">{o.event.title}</p>

@@ -3,12 +3,14 @@
 import { bookingSchema, formatPaise, type Booking } from "@townplay/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { AuthGate } from "@/components/auth-gate";
 import { PayPanel } from "@/components/booking/pay-panel";
 import { SharingPanel } from "@/components/booking/sharing-panel";
 import { BookingStatusBadge } from "@/components/booking/status-badge";
 import { FormError } from "@/components/form-error";
+import { ChevronLeftIcon } from "@/components/icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -55,21 +57,54 @@ function Detail({ id }: { id: string }) {
   const canCancel = b.refundIfCancelledNowPaise !== null;
 
   return (
-    <article className="space-y-5">
-      <header className="space-y-1">
-        <div className="flex items-center justify-between gap-2">
-          <h1 className="text-2xl font-bold">{b.venue.name}</h1>
-          <BookingStatusBadge status={b.status} />
-        </div>
-        <p>
-          {longDate(b.date, locale)} · {b.startTime}–{b.endTime}
-        </p>
-        <p className="text-sm text-muted-foreground">{b.resource.name}</p>
-      </header>
+    <article className="space-y-5 pt-6">
+      <Link
+        href="/bookings"
+        className="pressable inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
+        <ChevronLeftIcon size={16} />
+        {t("title")}
+      </Link>
 
-      <div className="rounded-lg bg-accent p-4 text-center">
-        <p className="text-sm text-muted-foreground">{t("code")}</p>
-        <p className="font-mono text-3xl font-bold tracking-widest">{b.code}</p>
+      {/* Ticket-style pass: what the player shows at the venue. */}
+      <div className="animate-scale-in overflow-hidden rounded-[1.75rem] bg-foreground text-background shadow-lift">
+        <div className="relative space-y-4 p-5">
+          <div
+            aria-hidden="true"
+            className="absolute -top-16 -right-12 h-44 w-44 rounded-full bg-[radial-gradient(circle,oklch(0.56_0.17_148/0.65),transparent_65%)]"
+          />
+          <div className="relative flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase opacity-60">{b.resource.name}</p>
+              <h1 className="font-display text-2xl leading-tight font-extrabold">{b.venue.name}</h1>
+            </div>
+            <BookingStatusBadge status={b.status} />
+          </div>
+          <dl className="relative grid grid-cols-2 gap-3">
+            <div>
+              <dt className="text-xs opacity-60">{t("date")}</dt>
+              <dd className="font-semibold">{longDate(b.date, locale)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs opacity-60">{t("time")}</dt>
+              <dd className="font-display text-xl font-extrabold">
+                {b.startTime}–{b.endTime}
+              </dd>
+            </div>
+          </dl>
+        </div>
+        <div className="relative border-t-2 border-dashed border-background/20 px-5 py-4 text-center">
+          <span
+            aria-hidden="true"
+            className="absolute top-0 -left-3 h-6 w-6 -translate-y-1/2 rounded-full bg-background"
+          />
+          <span
+            aria-hidden="true"
+            className="absolute top-0 -right-3 h-6 w-6 -translate-y-1/2 rounded-full bg-background"
+          />
+          <p className="text-xs font-semibold uppercase opacity-60">{t("code")}</p>
+          <p className="font-mono text-4xl font-bold tracking-[0.3em] text-energy">{b.code}</p>
+        </div>
       </div>
 
       {b.status === "pending_payment" && (
@@ -131,7 +166,7 @@ function Detail({ id }: { id: string }) {
       </dl>
 
       {b.cancellation && (
-        <div className="space-y-1 rounded-lg border p-3 text-sm">
+        <div className="space-y-1 rounded-2xl border bg-card p-4 shadow-card text-sm">
           <p className="font-medium">{t(`cancelledBy.${b.cancellation.by}`)}</p>
           {b.cancellation.reason && <p>{b.cancellation.reason}</p>}
           <p>{t("refund", { amount: formatPaise(b.cancellation.refundPaise) })}</p>
@@ -188,7 +223,7 @@ function Detail({ id }: { id: string }) {
       </section>
 
       {canCancel && (
-        <section className="space-y-2 rounded-lg border p-3">
+        <section className="space-y-2 rounded-2xl border bg-card p-4 shadow-card">
           <p className="text-sm">
             {b.refundIfCancelledNowPaise! > 0
               ? t("refundNow", { amount: formatPaise(b.refundIfCancelledNowPaise!) })

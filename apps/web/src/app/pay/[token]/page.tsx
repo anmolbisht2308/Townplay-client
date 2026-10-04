@@ -36,7 +36,7 @@ export default function PaySharePage({ params }: { params: Promise<{ token: stri
   return (
     <article className="mx-auto max-w-md space-y-5 pt-4">
       <header className="space-y-1">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-3xl font-extrabold">{t("title")}</h1>
         <p className="text-muted-foreground">{t("for", { name: s.name })}</p>
         <p className="font-medium">
           {s.venueName} · {s.courtName}
@@ -49,7 +49,7 @@ export default function PaySharePage({ params }: { params: Promise<{ token: stri
         </p>
       </header>
 
-      <dl className="space-y-1 rounded-lg border p-3 text-sm">
+      <dl className="space-y-1 rounded-2xl border bg-card p-4 shadow-card text-sm">
         <div className="flex justify-between">
           <dt>{t("amount")}</dt>
           <dd>{formatPaise(s.amountPaise)}</dd>

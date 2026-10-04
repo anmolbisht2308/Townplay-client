@@ -103,7 +103,7 @@ function GameView({ id }: { id: string }) {
     <article className="space-y-5 pt-4">
       <header className="space-y-1">
         <div className="flex items-center justify-between gap-2">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-3xl font-extrabold">
             {t(`sports.${g.sport}`)} · {t(`games.skill.${g.skillLevel}`)}
           </h1>
           <span className="rounded-full bg-accent px-2 py-0.5 text-xs">
@@ -119,13 +119,13 @@ function GameView({ id }: { id: string }) {
       </header>
       <div className="grid grid-cols-2 gap-2 text-center">
         <div className="rounded-lg border p-2">
-          <p className="text-2xl font-bold text-primary">{g.spotsLeft}</p>
+          <p className="text-3xl font-extrabold text-primary">{g.spotsLeft}</p>
           <p className="text-xs text-muted-foreground">
             {t("games.spotsLeft", { count: g.spotsLeft })}
           </p>
         </div>
         <div className="rounded-lg border p-2">
-          <p className="text-2xl font-bold">
+          <p className="text-3xl font-extrabold">
             {g.pricePerHeadPaise > 0 ? formatPaise(g.pricePerHeadPaise) : "₹0"}
           </p>
           <p className="text-xs text-muted-foreground">
@@ -169,7 +169,11 @@ function GameView({ id }: { id: string }) {
         !mine &&
         (joinOpen ? (
           me.data ? (
-            <form onSubmit={submit} className="space-y-3 rounded-lg border p-3" noValidate>
+            <form
+              onSubmit={submit}
+              className="space-y-3 rounded-2xl border bg-card p-4 shadow-card"
+              noValidate
+            >
               <Field label={t("games.yourName")}>
                 <Input
                   autoComplete="name"

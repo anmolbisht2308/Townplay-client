@@ -52,7 +52,10 @@ function Plans({ venueId }: { venueId: string }) {
       {plans.data.length === 0 && <p className="text-muted-foreground">{t("noPlans")}</p>}
       <ul className="space-y-2">
         {plans.data.map((p) => (
-          <li key={p.id} className="flex items-start justify-between gap-2 rounded-lg border p-3">
+          <li
+            key={p.id}
+            className="flex items-start justify-between gap-2 rounded-2xl border bg-card p-4 shadow-card"
+          >
             <div className="min-w-0">
               <p className="font-semibold">{p.name}</p>
               <p className="text-sm text-muted-foreground">
@@ -102,7 +105,7 @@ function Batches({ venueId }: { venueId: string }) {
       {batches.data.length === 0 && <p className="text-muted-foreground">{t("noBatches")}</p>}
       <ul className="space-y-2">
         {batches.data.map((b) => (
-          <li key={b.id} className="space-y-2 rounded-lg border p-3">
+          <li key={b.id} className="space-y-2 rounded-2xl border bg-card p-4 shadow-card">
             <div className="flex items-baseline justify-between gap-2">
               <p className="font-semibold">{b.title}</p>
               {b.status === "ended" && (
@@ -227,7 +230,7 @@ function Page({ venueId }: { venueId: string }) {
   const [tab, setTab] = useState<Tab>("plans");
   return (
     <section className="space-y-4 pt-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <h1 className="text-3xl font-extrabold">{t("title")}</h1>
       <nav className="flex gap-2" role="tablist">
         {(["plans", "batches", "members"] as const).map((x) => (
           <button
