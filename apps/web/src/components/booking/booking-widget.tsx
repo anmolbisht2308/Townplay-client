@@ -113,39 +113,56 @@ export function BookingWidget({
   }
 
   return (
-    <section className="space-y-3" aria-labelledby="book-heading">
-      <h2 id="book-heading" className="text-lg font-semibold">
-        {t("title")}
-      </h2>
+    <section
+      className="space-y-4 rounded-2xl border bg-card p-4 shadow-card md:p-5"
+      aria-labelledby="book-heading"
+    >
+      <div className="flex items-center justify-between gap-2">
+        <h2 id="book-heading" className="text-xl font-extrabold">
+          {t("title")}
+        </h2>
+        <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+          </span>
+          {t("live")}
+        </span>
+      </div>
 
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1" role="tablist">
+      <div
+        className="scroller -mx-4 gap-2 px-4 pb-1 md:-mx-5 md:px-5 md:[--scroller-pad:1.25rem]"
+        role="tablist"
+      >
         {dates.map((d, i) => {
           const l = dayLabel(d, locale);
+          const on = d === date;
           return (
             <button
               key={d}
               type="button"
               role="tab"
-              aria-selected={d === date}
+              aria-selected={on}
               onClick={() => pickDate(d)}
               className={cn(
-                "flex w-14 shrink-0 flex-col items-center rounded-lg border py-1.5 text-xs",
-                d === date
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "hover:bg-accent",
+                "pressable flex w-16 shrink-0 flex-col items-center rounded-2xl border py-2 text-xs font-medium",
+                on
+                  ? "border-foreground bg-foreground text-background shadow-card"
+                  : "bg-card hover:border-primary",
               )}
             >
-              <span>{i === 0 ? t("today") : i === 1 ? t("tomorrow") : l.weekday}</span>
-              <span className="text-base font-semibold">{l.day}</span>
-              <span>{l.month}</span>
+              <span className={on ? "opacity-80" : "text-muted-foreground"}>
+                {i === 0 ? t("today") : i === 1 ? t("tomorrow") : l.weekday}
+              </span>
+              <span className="font-display text-xl font-extrabold">{l.day}</span>
+              <span className={on ? "opacity-80" : "text-muted-foreground"}>{l.month}</span>
             </button>
           );
         })}
       </div>
 
-      {availability.isPending && <p className="text-sm text-muted-foreground">{t("loading")}</p>}
       {availability.data && availability.data.resources.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto" role="tablist">
+        <div className="flex gap-1 rounded-xl bg-surface p-1" role="tablist">
           {availability.data.resources.map((r, i) => (
             <button
               key={r.resourceId}
@@ -157,8 +174,8 @@ export function BookingWidget({
                 setSelected([]);
               }}
               className={cn(
-                "shrink-0 rounded-full border px-3 py-1 text-sm",
-                i === courtIndex && "border-primary bg-primary text-primary-foreground",
+                "pressable min-w-0 flex-1 truncate rounded-lg px-3 py-2 text-sm font-semibold",
+                i === courtIndex ? "bg-card text-foreground shadow-card" : "text-muted-foreground",
               )}
             >
               {r.name}
@@ -167,101 +184,166 @@ export function BookingWidget({
         </div>
       )}
 
+      {availability.isPending && (
+        <ul
+          className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-3"
+          aria-label={t("loading")}
+        >
+          {Array.from({ length: 9 }, (_, i) => (
+            <li key={i} className="skeleton h-14" />
+          ))}
+        </ul>
+      )}
       {court && court.slots.length === 0 && (
-        <p className="text-sm text-muted-foreground">{t("noSlots")}</p>
+        <p className="rounded-xl bg-surface p-4 text-center text-sm text-muted-foreground">
+          {t("noSlots")}
+        </p>
       )}
       {court && court.slots.length > 0 && (
         <>
-          <p className="text-xs text-muted-foreground">{t("selectHint")}</p>
-          <ul className="grid grid-cols-3 gap-2">
-            {court.slots.map((s) => {
+          <ul
+            className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-3"
+            key={`${date}-${courtIndex}`}
+          >
+            {court.slots.map((s, i) => {
               const isSelected = selected.includes(s.startTime);
+              const open = s.status === "available";
               return (
-                <li key={s.startTime}>
+                <li
+                  key={s.startTime}
+                  className="animate-scale-in"
+                  style={{ "--i": Math.min(i, 12) } as React.CSSProperties}
+                >
                   <button
                     type="button"
-                    disabled={s.status !== "available"}
+                    disabled={!open}
                     aria-pressed={isSelected}
                     onClick={() => tap(s)}
                     className={cn(
-                      "flex w-full flex-col items-center rounded-md border px-1 py-2 text-sm",
-                      s.status === "available" && !isSelected && "hover:border-primary",
-                      isSelected && "border-primary bg-primary text-primary-foreground",
-                      s.status !== "available" &&
-                        "cursor-not-allowed bg-accent text-muted-foreground line-through",
+                      "pressable relative flex h-14 w-full flex-col items-center justify-center rounded-xl border text-sm",
+                      open && !isSelected && "bg-card hover:border-primary hover:bg-primary-soft",
+                      isSelected && "border-primary bg-primary text-primary-foreground shadow-lift",
+                      !open &&
+                        "cursor-not-allowed border-transparent bg-[repeating-linear-gradient(135deg,var(--accent)_0_6px,transparent_6px_12px)] text-muted-foreground",
                     )}
                   >
-                    <span className="font-medium">{s.startTime}</span>
-                    <span className="text-xs">
-                      {s.status === "available" && s.pricePaise !== null
-                        ? formatPaise(s.pricePaise)
-                        : t(s.status)}
+                    {isSelected && (
+                      <span className="animate-pop absolute -top-1.5 -right-1.5 grid h-5 w-5 place-items-center rounded-full bg-energy text-[11px] text-energy-foreground shadow">
+                        ✓
+                      </span>
+                    )}
+                    <span className={cn("font-bold", !open && "line-through")}>{s.startTime}</span>
+                    <span
+                      className={cn(
+                        "text-[11px]",
+                        isSelected ? "opacity-90" : open ? "text-muted-foreground" : "",
+                      )}
+                    >
+                      {open && s.pricePaise !== null ? formatPaise(s.pricePaise) : t(s.status)}
                     </span>
                   </button>
                 </li>
               );
             })}
           </ul>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <span className="h-3 w-3 rounded border bg-card" />
+              {t("available")}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-3 w-3 rounded bg-primary" />
+              {t("selected")}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-3 w-3 rounded bg-[repeating-linear-gradient(135deg,var(--border)_0_3px,transparent_3px_6px)]" />
+              {t("taken")}
+            </span>
+          </div>
+          {picked.length === 0 && (
+            <p className="text-xs text-muted-foreground">{t("selectHint")}</p>
+          )}
         </>
       )}
 
       {picked.length > 0 && (
-        <form onSubmit={submit} className="space-y-3 rounded-lg border p-3" noValidate>
-          <p className="font-medium">
-            {t("summary", {
-              count: picked.length,
-              start: picked[0]!.startTime,
-              end: picked.at(-1)!.endTime,
-            })}
-          </p>
-          <dl className="space-y-1 text-sm">
+        <form
+          onSubmit={submit}
+          className="animate-scale-in space-y-4 rounded-2xl bg-surface p-4"
+          noValidate
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold text-primary-strong uppercase">{t("yourSlot")}</p>
+              <p className="font-display text-lg font-extrabold">
+                {t("summary", {
+                  count: picked.length,
+                  start: picked[0]!.startTime,
+                  end: picked.at(-1)!.endTime,
+                })}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSelected([])}
+              className="pressable shrink-0 rounded-full px-2 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground"
+            >
+              {t("clear")}
+            </button>
+          </div>
+          <dl className="space-y-1.5 text-sm">
             <div className="flex justify-between">
-              <dt>{t("total")}</dt>
+              <dt className="text-muted-foreground">{t("total")}</dt>
               <dd>{formatPaise(amount.totalPaise)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt>{t("advance")}</dt>
+              <dt className="text-muted-foreground">{t("advance")}</dt>
               <dd>{formatPaise(amount.advancePaise)}</dd>
             </div>
             {amount.convenienceFeePaise > 0 && (
               <div className="flex justify-between">
-                <dt>{t("fee")}</dt>
+                <dt className="text-muted-foreground">{t("fee")}</dt>
                 <dd>{formatPaise(amount.convenienceFeePaise)}</dd>
               </div>
             )}
-            <div className="flex justify-between border-t pt-1 font-medium">
+            <div className="flex justify-between border-t pt-2 text-base font-bold">
               <dt>{t("payNow")}</dt>
               <dd>{formatPaise(payNow)}</dd>
             </div>
-            <div className="flex justify-between text-muted-foreground">
+            <div className="flex justify-between text-xs text-muted-foreground">
               <dt>{t("balance")}</dt>
               <dd>{formatPaise(amount.balancePaise)}</dd>
             </div>
           </dl>
           {me.data ? (
             <>
-              <Field label={t("name")}>
-                <Input
-                  autoComplete="name"
-                  value={name}
-                  placeholder={me.data.name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </Field>
-              <Field label={t("phone")}>
-                <Input
-                  inputMode="numeric"
-                  autoComplete="tel-national"
-                  maxLength={10}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                />
-              </Field>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <Field label={t("name")}>
+                  <Input
+                    autoComplete="name"
+                    value={name}
+                    placeholder={me.data.name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </Field>
+                <Field label={t("phone")}>
+                  <Input
+                    inputMode="numeric"
+                    autoComplete="tel-national"
+                    maxLength={10}
+                    value={phone}
+                    placeholder="98765 43210"
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+                  />
+                </Field>
+              </div>
               <p className="text-xs text-muted-foreground">{t("phoneHint")}</p>
               <Button type="submit" size="lg" className="w-full" disabled={hold.isPending}>
-                {amount.advancePaise > 0
-                  ? t("hold", { amount: formatPaise(amount.advancePaise) })
-                  : t("holdFree")}
+                {hold.isPending
+                  ? t("holding")
+                  : amount.advancePaise > 0
+                    ? t("hold", { amount: formatPaise(amount.advancePaise) })
+                    : t("holdFree")}
               </Button>
             </>
           ) : (
@@ -272,7 +354,10 @@ export function BookingWidget({
         </form>
       )}
       {error && (
-        <p role="alert" className="text-sm text-destructive">
+        <p
+          role="alert"
+          className="animate-fade-in rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive"
+        >
           {error}
         </p>
       )}

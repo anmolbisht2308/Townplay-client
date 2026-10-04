@@ -124,7 +124,8 @@
     "club": "क्लब",
     "cafe": "कैफ़े",
     "events": "इवेंट",
-    "games": "ओपन गेम"
+    "games": "ओपन गेम",
+    "label": "श्रेणियाँ"
   },
   "city": {
     "title": "{city} में वेन्यू",
@@ -141,7 +142,11 @@
     "kmAway": "{km} किमी दूर",
     "loadMore": "और वेन्यू",
     "eventsSoon": "इवेंट जल्द आ रहे हैं।",
-    "chooseCity": "अपना शहर चुनें"
+    "chooseCity": "अपना शहर चुनें",
+    "eyebrow": "घंटे के हिसाब से बुक करें · तुरंत पुष्टि",
+    "count": "{count, plural, one {# वेन्यू} other {# वेन्यू}}{more, select, more {+} other {}}",
+    "emptyTitle": "अभी यहाँ कुछ नहीं",
+    "clearFilters": "फ़िल्टर हटाएँ"
   },
   "venue": {
     "sports": "खेल",
@@ -158,7 +163,14 @@
     "address": "पता",
     "perSlot": "{mins} मिनट का स्लॉट",
     "maxPlayers": "अधिकतम {count} खिलाड़ी",
-    "allDays": "हर दिन"
+    "allDays": "हर दिन",
+    "back": "{city} के सभी वेन्यू",
+    "statFrom": "शुरुआत",
+    "statToday": "आज",
+    "statAdvance": "एडवांस",
+    "directions": "रास्ता",
+    "share": "WhatsApp पर शेयर करें",
+    "about": "जानकारी"
   },
   "owner": {
     "title": "आपका बिज़नेस",
@@ -318,7 +330,12 @@
     "loading": "स्लॉट लोड हो रहे हैं…",
     "invalidCustomer": "अपना नाम और सही 10 अंकों का मोबाइल नंबर डालें।",
     "fee": "सुविधा शुल्क",
-    "payNow": "अभी भुगतान"
+    "payNow": "अभी भुगतान",
+    "live": "लाइव उपलब्धता",
+    "selected": "चुना गया",
+    "yourSlot": "आपका स्लॉट",
+    "clear": "हटाएँ",
+    "holding": "रिज़र्व हो रहा है…"
   },
   "bookings": {
     "title": "मेरी बुकिंग",

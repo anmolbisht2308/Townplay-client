@@ -258,6 +258,8 @@
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  /* Snap to the padded edge, not the box edge, so the first item lines up with the page. */
+  scroll-padding-inline: var(--scroller-pad, 1rem);
   scrollbar-width: none;
   overscroll-behavior-x: contain;
   &::-webkit-scrollbar {
