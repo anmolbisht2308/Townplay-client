@@ -1,11 +1,13 @@
 import { formatPaise, type PublicVenue } from "@townplay/shared";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { BookingWidget } from "@/components/booking/booking-widget";
 import { buttonVariants } from "@/components/ui/button";
 import { clientEnv } from "@/env";
 import { imageUrl } from "@/lib/images";
 import { googleMapsUrl } from "@/lib/maps";
 import { getVenue } from "./data";
+import { Offerings } from "./offerings";
 
 type Props = { params: Promise<{ city: string; slug: string }> };
 
@@ -101,8 +103,8 @@ export default async function VenuePage({ params }: Props) {
           {t("venue.openInMaps")}
         </a>
       </div>
-      {/* TODO(phase 2): slot booking replaces this note. */}
-      <p className="rounded-md bg-accent p-3 text-sm">{t("venue.bookingSoon")}</p>
+      <BookingWidget venueId={venue.id} advancePercent={venue.bookingPolicy.advancePercent} />
+      <Offerings venueId={venue.id} citySlug={venue.citySlug} />
 
       {venue.description && <p className="whitespace-pre-line">{venue.description}</p>}
 

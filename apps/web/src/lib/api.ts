@@ -46,7 +46,7 @@ export const api = {
   get: async <T extends z.ZodType>(path: string, schema: T): Promise<z.infer<T>> =>
     schema.parse(await apiFetch(path)),
   send: async <T extends z.ZodType>(
-    method: "POST" | "PATCH" | "DELETE",
+    method: "POST" | "PUT" | "PATCH" | "DELETE",
     path: string,
     schema: T,
     body?: unknown,

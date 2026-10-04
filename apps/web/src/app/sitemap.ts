@@ -9,9 +9,10 @@ export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = clientEnv.NEXT_PUBLIC_SITE_URL;
-  const [cities, venues] = await Promise.all([
+  const [cities, venues, events] = await Promise.all([
     serverGet("/cities", z.array(cityResponseSchema), 3600),
     serverGet("/sitemap", z.array(sitemapEntrySchema), 3600),
+    serverGet("/sitemap/events", z.array(sitemapEntrySchema), 3600),
   ]);
   return [
     { url: base, changeFrequency: "daily", priority: 1 },
@@ -19,6 +20,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${base}/${c.slug}`,
       changeFrequency: "daily" as const,
       priority: 0.9,
+    })),
+    ...cities.map((c) => ({
+      url: `${base}/${c.slug}/events`,
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    })),
+    ...events.map((e) => ({
+      url: `${base}/${e.citySlug}/events/${e.slug}`,
+      lastModified: e.updatedAt,
+      changeFrequency: "daily" as const,
+      priority: 0.7,
     })),
     ...venues.map((v) => ({
       url: `${base}/${v.citySlug}/venues/${v.slug}`,

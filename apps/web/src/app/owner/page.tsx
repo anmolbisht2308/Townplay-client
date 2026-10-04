@@ -9,6 +9,7 @@ import { z } from "zod";
 import { AuthGate } from "@/components/auth-gate";
 import { FormError } from "@/components/form-error";
 import { BusinessForm } from "@/components/owner/business-form";
+import { PushToggle } from "@/components/owner/push-toggle";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 
@@ -39,6 +40,18 @@ function VenueRow({ venue }: { venue: Venue }) {
           className={buttonVariants({ variant: "outline", size: "sm" })}
         >
           {t("edit")}
+        </Link>
+        <Link
+          href={`/owner/venues/${venue.id}/calendar`}
+          className={buttonVariants({ variant: "outline", size: "sm" })}
+        >
+          {t("calendar")}
+        </Link>
+        <Link
+          href={`/owner/venues/${venue.id}/memberships`}
+          className={buttonVariants({ variant: "outline", size: "sm" })}
+        >
+          {t("memberships")}
         </Link>
         <Link
           href={`/owner/venues/${venue.id}/courts`}
@@ -94,7 +107,13 @@ function Dashboard() {
 
   return (
     <section className="space-y-6">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+      <div className="flex items-center justify-between gap-2">
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <Link href="/owner/events" className={buttonVariants({ variant: "outline", size: "sm" })}>
+          {t("events")}
+        </Link>
+      </div>
+      <PushToggle />
       {businesses.data.map((b) => (
         <div key={b.id} className="space-y-3">
           <div className="flex items-center justify-between gap-2">
@@ -104,6 +123,12 @@ function Dashboard() {
           {b.reviewNote && (
             <p className="text-sm text-destructive">{t("reviewNote", { note: b.reviewNote })}</p>
           )}
+          <Link
+            href={`/owner/businesses/${b.id}/earnings`}
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+          >
+            {t("earnings")}
+          </Link>
           {editing === b.id ? (
             <BusinessForm business={b} onDone={() => setEditing(null)} />
           ) : (
