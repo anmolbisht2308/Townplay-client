@@ -11,9 +11,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { EventCard } from "@/components/events/event-card";
+import { CityTabs } from "@/components/city-tabs";
+import { ChipRow, EmptyState, PageHeading, Segmented } from "@/components/filters";
 import { buttonVariants } from "@/components/ui/button";
 import { serverGet } from "@/lib/server-api";
-import { cn } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ city: string }>;
@@ -69,65 +70,58 @@ export default async function EventsPage({ params, searchParams }: Props) {
     }
     return `/${city.slug}/events?${p.toString()}`;
   };
-  const chip = (active: boolean) =>
-    cn(
-      "shrink-0 rounded-full border px-3 py-1.5 text-sm",
-      active ? "border-primary bg-primary text-primary-foreground" : "hover:bg-accent",
-    );
-
   return (
-    <section className="space-y-4 pt-4">
-      <nav className="-mx-4 flex gap-2 overflow-x-auto px-4">
-        {(["sports", "club", "cafe"] as const).map((c) => (
-          <Link key={c} href={`/${city.slug}?category=${c}`} className={chip(false)}>
-            {t(`categories.${c}`)}
-          </Link>
-        ))}
-        <span className={chip(true)} aria-current="page">
-          {t("categories.events")}
-        </span>
-      </nav>
-      <h1 className="text-2xl font-bold">{t("events.title", { city: city.name })}</h1>
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4">
-        {EVENT_WHEN.map((w) => (
-          <Link
-            key={w}
-            href={href({ when: w, cursor: undefined })}
-            className={chip(query.when === w)}
-          >
-            {t(`events.when.${w}`)}
-          </Link>
-        ))}
+    <section data-wide className="space-y-6 pt-6">
+      <PageHeading eyebrow={t("events.eyebrow")} title={t("events.title", { city: city.name })} />
+      <CityTabs citySlug={city.slug} active="events" />
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <Segmented
+          label={t("events.whenLabel")}
+          items={EVENT_WHEN.map((w) => ({
+            href: href({ when: w, cursor: undefined }),
+            label: t(`events.when.${w}`),
+            active: query.when === w,
+          }))}
+        />
+        <ChipRow
+          label={t("events.typeLabel")}
+          items={[
+            {
+              href: href({ type: undefined, cursor: undefined }),
+              label: t("events.allTypes"),
+              active: !query.type,
+            },
+            ...EVENT_TYPES.map((type) => ({
+              href: href({ type, cursor: undefined }),
+              label: t(`events.types.${type}`),
+              active: query.type === type,
+            })),
+          ]}
+        />
       </div>
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4">
-        <Link href={href({ type: undefined, cursor: undefined })} className={chip(!query.type)}>
-          {t("events.allTypes")}
-        </Link>
-        {EVENT_TYPES.map((type) => (
-          <Link
-            key={type}
-            href={href({ type, cursor: undefined })}
-            className={chip(query.type === type)}
+      {list.items.length === 0 && (
+        <EmptyState emoji="🎉" title={t("events.emptyTitle")} text={t("events.empty")} />
+      )}
+      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {list.items.map((e, i) => (
+          <li
+            key={e.id}
+            className="animate-fade-up"
+            style={{ "--i": Math.min(i, 8) } as React.CSSProperties}
           >
-            {t(`events.types.${type}`)}
-          </Link>
-        ))}
-      </div>
-      {list.items.length === 0 && <p className="text-muted-foreground">{t("events.empty")}</p>}
-      <ul className="space-y-3">
-        {list.items.map((e) => (
-          <li key={e.id}>
             <EventCard event={e} citySlug={city.slug} />
           </li>
         ))}
       </ul>
       {list.nextCursor && (
-        <Link
-          href={href({ cursor: list.nextCursor })}
-          className={buttonVariants({ variant: "outline" })}
-        >
-          {t("events.more")}
-        </Link>
+        <div className="flex justify-center">
+          <Link
+            href={href({ cursor: list.nextCursor })}
+            className={buttonVariants({ variant: "outline", size: "lg" })}
+          >
+            {t("events.more")}
+          </Link>
+        </div>
       )}
     </section>
   );

@@ -81,19 +81,28 @@ export function TicketPicker({
     reserve.mutate();
   }
 
-  if (closed) return <p className="text-sm text-muted-foreground">{t("closed")}</p>;
+  if (closed)
+    return (
+      <p className="rounded-2xl border bg-card p-5 text-center text-sm text-muted-foreground shadow-card">
+        {t("closed")}
+      </p>
+    );
 
   return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-semibold">{t("tickets")}</h2>
+    <section className="space-y-4 rounded-2xl border bg-card p-4 shadow-card md:p-5">
+      <h2 className="text-xl font-extrabold">{t("tickets")}</h2>
       <ul className="space-y-2">
         {tiers.map((tier) => (
           <li
             key={tier.id}
-            className="flex items-center justify-between gap-2 rounded-lg border p-3"
+            className={cn(
+              "flex items-center justify-between gap-3 rounded-xl border p-3 transition-colors",
+              (qty[tier.id] ?? 0) > 0 && "border-primary bg-primary-soft",
+              tier.remaining <= 0 && "opacity-60",
+            )}
           >
-            <div>
-              <p className="font-medium">{tier.name}</p>
+            <div className="min-w-0">
+              <p className="truncate font-bold">{tier.name}</p>
               <p className="text-sm text-muted-foreground">
                 {tier.pricePaise === 0 ? t("free") : formatPaise(tier.pricePaise)} ·{" "}
                 {tier.remaining > 0 ? t("left", { count: tier.remaining }) : t("soldOut")}
@@ -103,20 +112,26 @@ export function TicketPicker({
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
+                size="icon"
+                className="h-9 w-9"
                 aria-label="−"
                 disabled={!qty[tier.id]}
                 onClick={() => change(tier, -1)}
               >
                 −
               </Button>
-              <span className="w-6 text-center tabular-nums" aria-live="polite">
+              <span
+                key={qty[tier.id] ?? 0}
+                className="animate-pop w-6 text-center font-display text-lg font-extrabold tabular-nums"
+                aria-live="polite"
+              >
                 {qty[tier.id] ?? 0}
               </span>
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
+                size="icon"
+                className="h-9 w-9"
                 aria-label="+"
                 disabled={tier.remaining <= (qty[tier.id] ?? 0) || count >= MAX_TICKETS_PER_ORDER}
                 onClick={() => change(tier, 1)}
@@ -129,7 +144,11 @@ export function TicketPicker({
       </ul>
       {count === 0 && <p className="text-xs text-muted-foreground">{t("pickTickets")}</p>}
       {count > 0 && (
-        <form onSubmit={submit} className="space-y-3 rounded-lg border p-3" noValidate>
+        <form
+          onSubmit={submit}
+          className="animate-scale-in space-y-4 rounded-2xl bg-surface p-4"
+          noValidate
+        >
           <dl className="space-y-1 text-sm">
             <div className="flex justify-between">
               <dt>{t("total")}</dt>
@@ -141,7 +160,7 @@ export function TicketPicker({
                 <dd>{formatPaise(fee)}</dd>
               </div>
             )}
-            <div className="flex justify-between border-t pt-1 font-medium">
+            <div className="flex justify-between border-t pt-2 text-base font-bold">
               <dt>{t("payNow")}</dt>
               <dd>{formatPaise(total + fee)}</dd>
             </div>
@@ -177,7 +196,10 @@ export function TicketPicker({
         </form>
       )}
       {error && (
-        <p role="alert" className="text-sm text-destructive">
+        <p
+          role="alert"
+          className="animate-fade-in rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive"
+        >
           {error}
         </p>
       )}

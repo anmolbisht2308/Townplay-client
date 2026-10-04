@@ -71,7 +71,9 @@
     "verify": "Verify and sign in",
     "changeEmail": "Use a different email",
     "invalidEmail": "Enter a valid email address.",
-    "invalidCode": "Enter the 6-digit code."
+    "invalidCode": "Enter the 6-digit code.",
+    "subtitle": "Book courts, join games and keep your tickets in one place.",
+    "terms": "By continuing you agree to Townplay's terms and privacy policy."
   },
   "sports": {
     "football": "Football",
@@ -512,7 +514,13 @@
     "directions": "Directions",
     "date": "When",
     "where": "Where",
-    "addToCalendar": "Add to calendar"
+    "addToCalendar": "Add to calendar",
+    "eyebrow": "Melas, open mics, club sessions",
+    "whenLabel": "When",
+    "typeLabel": "Type",
+    "emptyTitle": "No events here yet",
+    "back": "All events in {city}",
+    "about": "About this event"
   },
   "tickets": {
     "title": "My tickets",
@@ -632,7 +640,12 @@
       "completed": "Finished"
     },
     "directions": "Directions",
-    "venue": "Venue page"
+    "venue": "Venue page",
+    "eyebrow": "Short on players? Jump into a game",
+    "dayLabel": "Day",
+    "emptyTitle": "No open games right now",
+    "howItWorks": "Pay for your spot online and turn up. If the game is cancelled you get everything back.",
+    "bookToHost": "Book a court and open a game"
   },
   "sharing": {
     "title": "Play with others",

@@ -1,9 +1,12 @@
-import { publicEventSchema, type PublicEvent } from "@townplay/shared";
+import { formatPaise, publicEventSchema, type PublicEvent } from "@townplay/shared";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
+import Link from "next/link";
 import { cache } from "react";
 import { AddToCalendar } from "@/components/events/add-to-calendar";
 import { TicketPicker } from "@/components/events/ticket-picker";
+import { ChevronLeftIcon, ClockIcon, PinIcon, TicketIcon } from "@/components/icons";
+import { SportArt } from "@/components/sport-art";
 import { buttonVariants } from "@/components/ui/button";
 import { clientEnv } from "@/env";
 import { eventWhen } from "@/lib/event-time";
@@ -85,73 +88,142 @@ export default async function EventPage({ params }: Props) {
   const url = `${clientEnv.NEXT_PUBLIC_SITE_URL}/${city}/events/${slug}`;
   const closed = salesClosed(e);
 
+  const when = new Date(e.startsAt);
+  const day = when.toLocaleString(locale, { timeZone: "Asia/Kolkata", day: "numeric" });
+  const month = when.toLocaleString(locale, { timeZone: "Asia/Kolkata", month: "short" });
+  const minPrice = Math.min(...e.tiers.map((x) => x.pricePaise));
+  const info = "min-w-0 rounded-2xl bg-surface p-4";
+
   return (
-    <article className="space-y-5 pt-4">
+    <article data-wide className="space-y-6 pt-4 md:pt-6">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(jsonLd(e, url)).replace(/</g, "\\u003c"),
         }}
       />
-      {e.photos[0] && (
-        // eslint-disable-next-line @next/next/no-img-element -- Cloudinary already resizes
-        <img
-          src={imageUrl(e.photos[0].url, 720)}
-          alt={e.title}
-          className="h-52 w-full rounded-lg object-cover"
-        />
-      )}
-      <header className="space-y-1">
-        <h1 className="text-2xl font-bold">{e.title}</h1>
-        <p className="text-sm text-muted-foreground">{t("by", { organiser: e.organiserName })}</p>
-      </header>
-      {e.cancelled && (
-        <p className="rounded-md bg-red-100 p-3 text-sm text-red-900">{t("cancelled")}</p>
-      )}
-      <dl className="space-y-2 text-sm">
-        <div>
-          <dt className="font-medium">{t("date")}</dt>
-          <dd>
-            {eventWhen(e.startsAt, locale)} – {eventWhen(e.endsAt, locale)}
-          </dd>
-        </div>
-        <div>
-          <dt className="font-medium">{t("where")}</dt>
-          <dd>
-            {e.venueName ? `${e.venueName}, ` : ""}
-            {e.address}
-          </dd>
-        </div>
-        {e.ageLimit !== null && e.ageLimit > 0 && (
-          <dd className="font-medium">{t("ageLimit", { age: e.ageLimit })}</dd>
+      <Link
+        href={`/${city}/events`}
+        className="pressable inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
+        <ChevronLeftIcon size={16} />
+        {t("back", { city: e.cityName })}
+      </Link>
+
+      <div className="relative -mx-4 overflow-hidden md:mx-0 md:rounded-2xl">
+        {e.photos[0] ? (
+          // eslint-disable-next-line @next/next/no-img-element -- Cloudinary already resizes
+          <img
+            src={imageUrl(e.photos[0].url, 1200)}
+            alt={e.title}
+            fetchPriority="high"
+            className="animate-fade-in h-56 w-full object-cover md:h-80"
+          />
+        ) : (
+          <SportArt
+            sport={e.type === "club_session" ? "club" : "event"}
+            size="lg"
+            className="animate-scale-in h-56 md:h-80"
+          />
         )}
-      </dl>
-      <div className="grid grid-cols-2 gap-2">
-        <a
-          href={googleMapsUrl(e.location)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={buttonVariants({ variant: "outline" })}
-        >
-          {t("directions")}
-        </a>
-        <AddToCalendar
-          id={e.id}
-          title={e.title}
-          startsAt={e.startsAt}
-          endsAt={e.endsAt}
-          address={e.address}
-          url={url}
-        />
+        <span className="animate-pop absolute top-4 left-4 grid min-w-16 place-items-center rounded-2xl bg-background/95 px-3 py-2 text-center leading-none shadow-lift md:left-6">
+          <span className="font-display text-3xl font-extrabold">{day}</span>
+          <span className="text-xs font-bold text-primary-strong uppercase">{month}</span>
+        </span>
       </div>
-      {!e.cancelled && <TicketPicker eventId={e.id} tiers={e.tiers} closed={closed} />}
-      {e.description && <p className="whitespace-pre-line">{e.description}</p>}
-      <section className="space-y-1">
-        <h2 className="font-semibold">{t("organiser")}</h2>
-        <a href={`tel:+91${e.contactPhone}`} className={buttonVariants({ variant: "outline" })}>
-          {t("call")}
-        </a>
-      </section>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_24rem] lg:gap-x-8">
+        <header className="animate-fade-up min-w-0 space-y-3 lg:col-start-1">
+          <span className="inline-flex rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-strong">
+            {t(`types.${e.type}`)}
+          </span>
+          <h1 className="text-3xl leading-tight font-extrabold md:text-5xl">{e.title}</h1>
+          <p className="text-muted-foreground">{t("by", { organiser: e.organiserName })}</p>
+          {e.cancelled && (
+            <p className="rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">
+              {t("cancelled")}
+            </p>
+          )}
+          <dl className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className={info}>
+              <dt className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                <ClockIcon size={14} /> {t("date")}
+              </dt>
+              <dd className="mt-1 text-sm font-semibold">
+                {eventWhen(e.startsAt, locale)} – {eventWhen(e.endsAt, locale)}
+              </dd>
+            </div>
+            <div className={info}>
+              <dt className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                <PinIcon size={14} /> {t("where")}
+              </dt>
+              <dd className="mt-1 text-sm font-semibold">
+                {e.venueName ? `${e.venueName}, ` : ""}
+                {e.address}
+              </dd>
+            </div>
+            <div className={info}>
+              <dt className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                <TicketIcon size={14} /> {t("tickets")}
+              </dt>
+              <dd className="mt-1 text-sm font-semibold">
+                {minPrice === 0 ? t("free") : t("from", { price: formatPaise(minPrice) })}
+              </dd>
+            </div>
+            {e.ageLimit !== null && e.ageLimit > 0 && (
+              <div className={info}>
+                <dt className="text-xs font-semibold text-muted-foreground">🔞</dt>
+                <dd className="mt-1 text-sm font-semibold">{t("ageLimit", { age: e.ageLimit })}</dd>
+              </div>
+            )}
+          </dl>
+          <div className="grid grid-cols-2 gap-2">
+            <a
+              href={googleMapsUrl(e.location)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonVariants({ variant: "outline" })}
+            >
+              🧭 {t("directions")}
+            </a>
+            <AddToCalendar
+              id={e.id}
+              title={e.title}
+              startsAt={e.startsAt}
+              endsAt={e.endsAt}
+              address={e.address}
+              url={url}
+            />
+          </div>
+        </header>
+
+        {!e.cancelled && (
+          <div
+            id="tickets"
+            className="min-w-0 lg:sticky lg:top-[calc(var(--header-h)+1rem)] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start"
+          >
+            <TicketPicker eventId={e.id} tiers={e.tiers} closed={closed} />
+          </div>
+        )}
+
+        <div className="min-w-0 space-y-6 lg:col-start-1">
+          {e.description && (
+            <section className="reveal space-y-2 rounded-2xl border bg-card p-5 shadow-card">
+              <h2 className="text-xl font-bold">{t("about")}</h2>
+              <p className="whitespace-pre-line text-muted-foreground">{e.description}</p>
+            </section>
+          )}
+          <section className="reveal flex flex-wrap items-center justify-between gap-4 rounded-2xl border bg-card p-5 shadow-card">
+            <div className="min-w-0">
+              <h2 className="text-sm font-semibold text-muted-foreground">{t("organiser")}</h2>
+              <p className="font-display text-lg font-bold">{e.organiserName}</p>
+            </div>
+            <a href={`tel:+91${e.contactPhone}`} className={buttonVariants({ variant: "soft" })}>
+              📞 {t("call")}
+            </a>
+          </section>
+        </div>
+      </div>
     </article>
   );
 }

@@ -5,10 +5,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { GameCard } from "@/components/games/game-card";
-import { Select } from "@/components/ui/field";
+import { CityTabs } from "@/components/city-tabs";
+import { ChipRow, EmptyState, PageHeading, Segmented } from "@/components/filters";
 import { buttonVariants } from "@/components/ui/button";
 import { serverGet } from "@/lib/server-api";
-import { cn } from "@/lib/utils";
 
 type Props = {
   params: Promise<{ city: string }>;
@@ -47,62 +47,63 @@ export default async function GamesPage({ params, searchParams }: Props) {
     15,
   );
   const t = await getTranslations();
-  const chip = (active: boolean) =>
-    cn(
-      "shrink-0 rounded-full border px-3 py-1.5 text-sm",
-      active ? "border-primary bg-primary text-primary-foreground" : "hover:bg-accent",
-    );
+  const href = (next: { day?: string; sport?: string | null }) => {
+    const p = new URLSearchParams({ day: next.day ?? q.day });
+    const sport = next.sport === undefined ? q.sport : next.sport;
+    if (sport) p.set("sport", sport);
+    return `/${city.slug}/games?${p.toString()}`;
+  };
 
   return (
-    <section className="space-y-4 pt-4">
-      <nav className="-mx-4 flex gap-2 overflow-x-auto px-4">
-        {(["sports", "club", "cafe"] as const).map((c) => (
-          <Link key={c} href={`/${city.slug}?category=${c}`} className={chip(false)}>
-            {t(`categories.${c}`)}
-          </Link>
-        ))}
-        <Link href={`/${city.slug}/events`} className={chip(false)}>
-          {t("categories.events")}
-        </Link>
-        <span className={chip(true)} aria-current="page">
-          {t("categories.games")}
+    <section data-wide className="space-y-6 pt-6">
+      <PageHeading eyebrow={t("games.eyebrow")} title={t("games.title", { city: city.name })} />
+      <CityTabs citySlug={city.slug} active="games" />
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <Segmented
+          label={t("games.dayLabel")}
+          items={(["all", "today", "tomorrow"] as const).map((d) => ({
+            href: href({ day: d }),
+            label: t(`games.day.${d}`),
+            active: q.day === d,
+          }))}
+        />
+        <ChipRow
+          label={t("games.allSports")}
+          items={[
+            { href: href({ sport: null }), label: t("games.allSports"), active: !q.sport },
+            ...SPORTS.map((s) => ({
+              href: href({ sport: s }),
+              label: t(`sports.${s}`),
+              active: q.sport === s,
+            })),
+          ]}
+        />
+      </div>
+      <div className="flex items-center gap-3 rounded-2xl bg-energy/40 p-4 text-sm">
+        <span className="text-2xl" aria-hidden="true">
+          💡
         </span>
-      </nav>
-      <h1 className="text-2xl font-bold">{t("games.title", { city: city.name })}</h1>
-      <form className="flex flex-wrap gap-2" action={`/${city.slug}/games`}>
-        <div className="flex w-full gap-2">
-          {(["all", "today", "tomorrow"] as const).map((d) => (
-            <Link
-              key={d}
-              href={`/${city.slug}/games?day=${d}${q.sport ? `&sport=${q.sport}` : ""}`}
-              className={chip(q.day === d)}
-            >
-              {t(`games.day.${d}`)}
+        <p>{t("games.howItWorks")}</p>
+      </div>
+      {games.length === 0 && (
+        <EmptyState
+          emoji="🤝"
+          title={t("games.emptyTitle")}
+          text={t("games.empty")}
+          action={
+            <Link href={`/${city.slug}`} className={buttonVariants({ variant: "outline" })}>
+              {t("games.bookToHost")}
             </Link>
-          ))}
-        </div>
-        <input type="hidden" name="day" value={q.day} />
-        <Select
-          name="sport"
-          defaultValue={q.sport ?? ""}
-          aria-label={t("games.allSports")}
-          className="h-9 min-w-0 flex-1"
-        >
-          <option value="">{t("games.allSports")}</option>
-          {SPORTS.map((s) => (
-            <option key={s} value={s}>
-              {t(`sports.${s}`)}
-            </option>
-          ))}
-        </Select>
-        <button type="submit" className={buttonVariants({ size: "sm" })}>
-          {t("city.searchButton")}
-        </button>
-      </form>
-      {games.length === 0 && <p className="text-muted-foreground">{t("games.empty")}</p>}
-      <ul className="space-y-3">
-        {games.map((g) => (
-          <li key={g.id}>
+          }
+        />
+      )}
+      <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {games.map((g, i) => (
+          <li
+            key={g.id}
+            className="animate-fade-up"
+            style={{ "--i": Math.min(i, 8) } as React.CSSProperties}
+          >
             <GameCard game={g} />
           </li>
         ))}
