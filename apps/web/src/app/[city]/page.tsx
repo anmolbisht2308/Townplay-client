@@ -21,7 +21,7 @@ type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const TABS = [...VENUE_CATEGORIES, "events"] as const;
+const TABS = [...VENUE_CATEGORIES, "events", "games"] as const;
 
 async function getCity(slug: string) {
   const cities = await serverGet("/cities", z.array(cityResponseSchema), 300);
@@ -46,7 +46,7 @@ export default async function CityPage({ params, searchParams }: Props) {
   const one = (k: string) => (typeof raw[k] === "string" && raw[k] !== "" ? raw[k] : undefined);
   const tab = TABS.find((c) => c === one("category")) ?? "sports";
   const parsed = venueListQuerySchema.safeParse({
-    category: tab === "events" ? undefined : tab,
+    category: tab === "events" || tab === "games" ? undefined : tab,
     sport: one("sport"),
     area: one("area"),
     q: one("q"),
@@ -67,7 +67,8 @@ export default async function CityPage({ params, searchParams }: Props) {
           serverGet(`/cities/${city.slug}/areas`, z.array(z.string()), 300),
         ]);
 
-  const tabHref = (c: string) => `/${city.slug}?category=${c}`;
+  const tabHref = (c: string) =>
+    c === "events" || c === "games" ? `/${city.slug}/${c}` : `/${city.slug}?category=${c}`;
   const moreHref = () => {
     const next = new URLSearchParams(qs);
     next.set("cursor", list?.nextCursor ?? "");

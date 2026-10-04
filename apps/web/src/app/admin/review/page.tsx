@@ -2,6 +2,7 @@
 
 import {
   BUSINESS_STATUSES,
+  EVENT_STATUSES,
   VENUE_STATUSES,
   reviewQueueItemSchema,
   type ReviewQueueItem,
@@ -20,7 +21,7 @@ import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 type Kind = ReviewQueueItem["kind"];
-type Action = "approve" | "reject" | "suspend" | "hide";
+type Action = "approve" | "reject" | "suspend" | "hide" | "cancel";
 
 function Item({ item }: { item: ReviewQueueItem }) {
   const t = useTranslations();
@@ -31,7 +32,7 @@ function Item({ item }: { item: ReviewQueueItem }) {
     mutationFn: (action: Action) =>
       api.send(
         "POST",
-        `/admin/${item.kind === "venue" ? "venues" : "businesses"}/${item.id}/${action}`,
+        `/admin/${item.kind === "venue" ? "venues" : item.kind === "event" ? "events" : "businesses"}/${item.id}/${action}`,
         z.unknown(),
         action === "approve" ? undefined : { reason },
       ),
@@ -43,14 +44,23 @@ function Item({ item }: { item: ReviewQueueItem }) {
     act.mutate(action);
   };
   const actions: Action[] =
-    item.kind === "venue" ? ["approve", "reject", "hide"] : ["approve", "reject", "suspend"];
+    item.kind === "venue"
+      ? ["approve", "reject", "hide"]
+      : item.kind === "event"
+        ? item.status === "published"
+          ? ["cancel"]
+          : ["approve", "reject"]
+        : ["approve", "reject", "suspend"];
 
   return (
     <li className="space-y-2 rounded-lg border p-3">
       <div>
         <p className="font-medium">
-          {item.kind === "venue" && item.status === "live" && item.citySlug && item.slug ? (
-            <Link href={`/${item.citySlug}/venues/${item.slug}`} className="underline">
+          {item.citySlug && item.slug && (item.status === "live" || item.status === "published") ? (
+            <Link
+              href={`/${item.citySlug}/${item.kind === "event" ? "events" : "venues"}/${item.slug}`}
+              className="underline"
+            >
               {item.name}
             </Link>
           ) : (
@@ -97,13 +107,14 @@ function Queue() {
     queryFn: () =>
       api.get(`/admin/review?kind=${kind}&status=${status}`, z.array(reviewQueueItemSchema)),
   });
-  const statuses = kind === "venue" ? VENUE_STATUSES : BUSINESS_STATUSES;
+  const statuses =
+    kind === "venue" ? VENUE_STATUSES : kind === "event" ? EVENT_STATUSES : BUSINESS_STATUSES;
 
   return (
     <section className="space-y-4">
       <h1 className="text-2xl font-bold">{t("admin.title")}</h1>
       <div className="flex gap-2">
-        {(["venue", "business"] as const).map((k) => (
+        {(["venue", "event", "business"] as const).map((k) => (
           <button
             key={k}
             type="button"
@@ -117,7 +128,11 @@ function Queue() {
               kind === k && "border-primary bg-primary text-primary-foreground",
             )}
           >
-            {k === "venue" ? t("admin.venues") : t("admin.businesses")}
+            {k === "venue"
+              ? t("admin.venues")
+              : k === "event"
+                ? t("admin.events")
+                : t("admin.businesses")}
           </button>
         ))}
       </div>

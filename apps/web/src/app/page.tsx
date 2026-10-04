@@ -21,6 +21,15 @@ export default async function HomePage() {
             {t("explore", { city: c.name })}
           </Link>
         ))}
+        <Link href="/bookings" className={buttonVariants({ variant: "outline" })}>
+          {t("myBookings")}
+        </Link>
+        <Link href="/tickets" className={buttonVariants({ variant: "outline" })}>
+          {t("myTickets")}
+        </Link>
+        <Link href="/memberships" className={buttonVariants({ variant: "outline" })}>
+          {t("myMemberships")}
+        </Link>
         <Link href="/owner" className={buttonVariants({ variant: "outline" })}>
           {t("ownerCta")}
         </Link>

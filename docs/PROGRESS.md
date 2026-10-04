@@ -1,5 +1,5 @@
 # Progress
 
-- Done: Phase 0 and Phase 1 (city listing with tabs, filters, search, near me; venue page with JSON-LD, OG image, Maps link and call button; sitemap and robots; owner onboarding, venue and courts editors with photo upload; admin review queue).
-- Next: Phase 2: date strip + slot grid booking, owner calendar.
-- Gotchas: set `NEXT_PUBLIC_SITE_URL` on Vercel (canonical URLs, sitemap). Sitemap is dynamic so the build never needs the api.
+- Done: Phases 0–6 (Phase 6: venue page plans/batches/club sessions + join, `/memberships` + `/memberships/[id]` pay/renew, owner `/owner/venues/[id]/memberships` plans/batches/members, `/owner/batches/[id]/attendance`, batch slots in the calendar, member discount + membership earnings).
+- Next: Phase 7 (admin, reviews, analytics, launch readiness).
+- Gotchas: `@townplay/shared` points to a local tarball (0.7.0) → after the server merges and releases shared-v0.7.0, set the release URL in `apps/web/package.json` and run `pnpm install` before committing.
