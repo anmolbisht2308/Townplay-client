@@ -22,7 +22,7 @@ export function Select({ className, ...props }: ComponentProps<"select">) {
   return (
     <select
       className={cn(
-        "h-11 w-full rounded-md border border-input bg-background px-2 text-base",
+        "h-12 w-full rounded-xl border border-input bg-card px-3 text-base shadow-sm transition-[border-color,box-shadow] focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15",
         className,
       )}
       {...props}
@@ -34,7 +34,7 @@ export function Textarea({ className, ...props }: ComponentProps<"textarea">) {
   return (
     <textarea
       className={cn(
-        "min-h-24 w-full rounded-md border border-input bg-background px-3 py-2 text-base",
+        "min-h-24 w-full rounded-xl border border-input bg-card px-4 py-3 text-base shadow-sm transition-[border-color,box-shadow] focus-visible:border-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/15",
         className,
       )}
       {...props}

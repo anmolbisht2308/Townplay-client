@@ -5,7 +5,8 @@
     "language": "Language",
     "loading": "Loading…",
     "error": "Something went wrong. Please try again.",
-    "close": "Close"
+    "close": "Close",
+    "skipToContent": "Skip to content"
   },
   "home": {
     "title": "Play more in Bareilly",
@@ -18,7 +19,45 @@
     "explore": "Explore venues in {city}",
     "myBookings": "My bookings",
     "myTickets": "My tickets",
-    "myMemberships": "My memberships"
+    "myMemberships": "My memberships",
+    "metaDescription": "Book turfs, badminton courts and box cricket in seconds, join open games and get event tickets in your city. Pay online, play tonight.",
+    "eyebrow": "Live in {city} · slots open today",
+    "heroTitle": "Play more in <mark>{city}</mark>",
+    "heroSubtitle": "Book turfs and courts in seconds, join open games and grab event tickets, all in one place.",
+    "searchPlaceholder": "Search turfs, courts, sports…",
+    "searchButton": "Search",
+    "mockConfirmed": "Booking confirmed",
+    "mockSlot": "Turf A · Today 7–8 PM",
+    "mockPlayers": "+12 playing tonight",
+    "mockSpots": "3 spots left in a game",
+    "tileCourts": "Book a court",
+    "tileCourtsDesc": "Turfs, courts and tables by the hour",
+    "tileGames": "Open games",
+    "tileGamesDesc": "Short on players? Join a team",
+    "tileEvents": "Events",
+    "tileEventsDesc": "Melas, open mics, tournaments",
+    "tileCoaching": "Coaching & clubs",
+    "tileCoachingDesc": "Batches and memberships",
+    "venuesTitle": "Popular in {city}",
+    "gamesTitle": "Open games, join in",
+    "eventsTitle": "Happening soon",
+    "seeAll": "See all",
+    "howTitle": "Book in <mark>3 taps</mark>",
+    "step": {
+      "pick": "Pick a slot",
+      "pickDesc": "See live availability and prices for every court.",
+      "pay": "Pay the advance",
+      "payDesc": "UPI or card. Your slot is locked instantly.",
+      "play": "Show up and play",
+      "playDesc": "Pay the rest at the venue. Split it with friends if you like."
+    },
+    "trustInstant": "Instant confirmation",
+    "trustSecure": "Secure Razorpay payments",
+    "trustRefund": "Refunds as per venue policy",
+    "ownerBadge": "For venue owners",
+    "ownerTitle": "Own a turf, court or club?",
+    "ownerText": "List it free. Get online bookings, a live calendar, coaching batches and payouts to your bank.",
+    "footer": "Made for {city}. Book, play, repeat."
   },
   "signIn": {
     "title": "Sign in to Townplay",
@@ -729,5 +768,18 @@
     "presentCount": "{count} of {total} present",
     "noRoster": "No members on this day.",
     "saved": "Saved"
+  },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "games": "Games",
+    "events": "Events",
+    "bookings": "Bookings",
+    "account": "Account",
+    "signIn": "Sign in",
+    "accountTitle": "Your account",
+    "accountSignedOut": "Sign in to see your bookings, tickets and memberships.",
+    "ownerDashboard": "Owner dashboard",
+    "admin": "Admin"
   }
 }

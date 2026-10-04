@@ -1,25 +1,51 @@
 @import "tailwindcss";
 
+/*
+ * Townplay design tokens. Sporty + energetic: a vivid pitch green, a lime "energy" accent,
+ * near-black ink. Every animation below is CSS only (no JS runtime) and switches off under
+ * prefers-reduced-motion, so it stays smooth on low-end Android.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --primary: oklch(0.52 0.15 150);
-  --primary-foreground: oklch(0.985 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.52 0.15 150);
-  --destructive: oklch(0.577 0.245 27.325);
-  --radius: 0.625rem;
+  --background: oklch(0.99 0.004 140);
+  --foreground: oklch(0.2 0.02 260);
+  --card: oklch(1 0 0);
+  --surface: oklch(0.965 0.012 145);
+  --primary: oklch(0.56 0.17 148);
+  --primary-strong: oklch(0.46 0.14 150);
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-soft: oklch(0.95 0.05 148);
+  --energy: oklch(0.91 0.2 118);
+  --energy-foreground: oklch(0.25 0.06 130);
+  --accent: oklch(0.96 0.008 145);
+  --accent-foreground: oklch(0.22 0.02 260);
+  --muted-foreground: oklch(0.5 0.02 260);
+  --border: oklch(0.91 0.01 145);
+  --input: oklch(0.88 0.012 145);
+  --ring: oklch(0.56 0.17 148);
+  --destructive: oklch(0.577 0.22 27);
+  --warning: oklch(0.75 0.15 70);
+  --radius: 0.875rem;
+  --shadow-card: 0 1px 2px oklch(0.2 0.02 260 / 0.06), 0 4px 16px -6px oklch(0.2 0.02 260 / 0.12);
+  --shadow-lift: 0 2px 4px oklch(0.2 0.02 260 / 0.06), 0 16px 32px -12px oklch(0.3 0.08 150 / 0.28);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --header-h: 3.75rem;
+  --bottom-nav-h: 4rem;
 }
 
 @theme inline {
+  --font-sans: var(--font-body), var(--font-deva), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), var(--font-deva), ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-surface: var(--surface);
   --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-energy: var(--energy);
+  --color-energy-foreground: var(--energy-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-muted-foreground: var(--muted-foreground);
@@ -27,15 +53,256 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
-  --radius-md: calc(var(--radius) - 2px);
+  --color-warning: var(--warning);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
+  --ease-out: var(--ease-out);
+  --ease-spring: var(--ease-spring);
 }
 
 @layer base {
   * {
     border-color: var(--border);
   }
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: calc(var(--header-h) + 0.75rem);
+  }
   body {
+    /* Safety net: a stray wide element must never make phones scroll sideways. */
+    overflow-x: clip;
     background: var(--background);
     color: var(--foreground);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
   }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--energy);
+    color: var(--energy-foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+/* ---------- motion ---------- */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes slide-up-sheet {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes float {
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(-3deg);
+  }
+}
+@keyframes drift {
+  50% {
+    transform: translate3d(4%, -3%, 0) scale(1.08);
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.55s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@utility animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@utility animate-scale-in {
+  animation: scale-in 0.35s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+}
+@utility animate-sheet {
+  animation: slide-up-sheet 0.38s var(--ease-out) both;
+}
+@utility animate-pop {
+  animation: pop 0.45s var(--ease-spring) both;
+}
+@utility animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+@utility animate-drift {
+  animation: drift 14s ease-in-out infinite;
+}
+@utility animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+/* Skeleton placeholder while data loads. */
+@utility skeleton {
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--accent) 25%,
+    oklch(0.99 0.004 140) 37%,
+    var(--accent) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.3s linear infinite;
+}
+
+/* Scroll reveal: fades content up as it enters the viewport (scroll-driven, no JS). */
+@utility reveal {
+  @supports (animation-timeline: view()) {
+    animation: fade-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 22%;
+  }
+}
+
+/* Pressable feedback for buttons, chips and cards. */
+@utility pressable {
+  transition:
+    transform 0.18s var(--ease-out),
+    box-shadow 0.25s var(--ease-out),
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Cards lift on hover only where there is a real pointer (no sticky hover on phones). */
+@utility lift {
+  transition:
+    transform 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lift);
+    }
+  }
+  &:active {
+    transform: scale(0.985);
+  }
+}
+
+/* Horizontal scroller with snap and hidden scrollbar. */
+@utility scroller {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  & > * {
+    scroll-snap-align: start;
+  }
+}
+
+/* Highlighter-pen underline behind a word. */
+@utility marker {
+  background: linear-gradient(
+    transparent 58%,
+    var(--energy) 58%,
+    var(--energy) 92%,
+    transparent 92%
+  );
+  padding-inline: 0.1em;
+  box-decoration-break: clone;
+}
+
+/* Page enter on every navigation (app/template.tsx re-mounts per route). */
+.page-enter {
+  animation: fade-up 0.45s var(--ease-out) both;
+}
+
+/* Cross-document navigations (full loads) cross-fade where supported. */
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Reading width for normal pages; listings opt out with data-wide. */
+.page-shell > :not([data-wide]) {
+  max-width: 48rem;
+  margin-inline: auto;
 }
